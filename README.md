@@ -41,12 +41,11 @@ Using the AsciiDoc Plugin, OFT is able to read and parse AsciiDoc files, trace t
 **User Guides**
 
 * [📖 User Guide](doc/user_guide.md)
-* [💲 Command Line Usage](core/src/main/resources/usage.txt)
 
 **News and Discussions**
 
 * [📢 Blog](https://blog.itsallcode.org/)
-* [🗨️ Discussion Board](https://github.com/itsallcode/openfasttrace-discussions)
+* [🗨️ Discussion Board](https://github.com/itsallcode/openfasttrace/discussions)
 
 **Information for Contributors**
 

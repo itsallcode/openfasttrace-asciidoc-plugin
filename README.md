@@ -10,7 +10,21 @@ _[Place a screenshot of a tracing report generated using this plugin here]_
 
 ## Project Information
 
-_[Place links and badges related to the project, build status, code quality, etc. here]_
+[![Build](https://github.com/itsallcode/openfasttrace-asciidoc-plugin/actions/workflows/build.yml/badge.svg)](https://github.com/itsallcode/openfasttrace-asciidoc-plugin/actions/workflows/build.yml)
+
+Sonarcloud status:
+
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=org.itsallcode%3Aopenfasttrace-asciidoc-plugin&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=org.itsallcode%3Aopenfasttrace-asciidoc-plugin)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=org.itsallcode%3Aopenfasttrace-asciidoc-plugin&metric=bugs)](https://sonarcloud.io/summary/new_code?id=org.itsallcode%3Aopenfasttrace-asciidoc-plugin)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=org.itsallcode%3Aopenfasttrace-asciidoc-plugin&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=org.itsallcode%3Aopenfasttrace-asciidoc-plugin)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=org.itsallcode%3Aopenfasttrace-asciidoc-plugin&metric=coverage)](https://sonarcloud.io/summary/new_code?id=org.itsallcode%3Aopenfasttrace-asciidoc-plugin)
+[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=org.itsallcode%3Aopenfasttrace-asciidoc-plugin&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=org.itsallcode%3Aopenfasttrace-asciidoc-plugin)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=org.itsallcode%3Aopenfasttrace-asciidoc-plugin&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=org.itsallcode%3Aopenfasttrace-asciidoc-plugin)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=org.itsallcode%3Aopenfasttrace-asciidoc-plugin&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=org.itsallcode%3Aopenfasttrace-asciidoc-plugin)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=org.itsallcode%3Aopenfasttrace-asciidoc-plugin&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=org.itsallcode%3Aopenfasttrace-asciidoc-plugin)
+[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=org.itsallcode%3Aopenfasttrace-asciidoc-plugin&metric=sqale_index)](https://sonarcloud.io/summary/new_code?id=org.itsallcode%3Aopenfasttrace-asciidoc-plugin)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=org.itsallcode%3Aopenfasttrace-asciidoc-plugin&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=org.itsallcode%3Aopenfasttrace-asciidoc-plugin)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=org.itsallcode%3Aopenfasttrace-asciidoc-plugin&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=org.itsallcode%3Aopenfasttrace-asciidoc-plugin)
 
 ## What is AsciiDoc?
 

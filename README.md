@@ -1,4 +1,4 @@
-# <img src="core/src/main/resources/openfasttrace_logo.svg" alt="OFT logo" width="150"/> OpenFastTrace AsciiDoc Plugin
+# <img src="doc/openfasttrace_logo.svg" alt="OFT logo" width="150"/> OpenFastTrace AsciiDoc Plugin
 
 ## What is OpenFastTrace AsciiDoc Plugin?
 
@@ -64,7 +64,7 @@ For more detailed information on how to use OpenFastTrack with AsciiDoc Plugin, 
 The OpenFastTrace AsciiDoc Plugin is supplied as a Java Archive (JAR) which can be obtained from:
 
 * [Maven Central](#)
-* [GitHub](#)
+* [GitHub](https://github.com/itsallcode/openfasttrace-asciidoc-plugin/releases)
 
 More details about adding the plugin to an existing establishment are outlined in the [developer guide](doc/developer_guide.md).
 

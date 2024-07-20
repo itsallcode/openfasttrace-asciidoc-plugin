@@ -89,10 +89,10 @@ mvn package -DskipTests
 
 ### Specify Java Version
 
-By default, the AsciiDoc plugin is built with Java 11. To build and test with a later version of Java, add argument `-Djava.version=17` to the Maven command.
+By default, the AsciiDoc plugin is built with Java 17. To build and test with a later version of Java, add argument `-Djava.version=21` to the Maven command.
 
 ```bash
-mvn -Djava.version=17 package -DskipTests
+mvn -Djava.version=21 package -DskipTests
 ```
 
 ### Speed Up Build

@@ -1,1 +1,288 @@
-<!-- Please add a design in the style of the OFT design document -->
+= OpenFastTrace AsciiDoc Plugin Design
+:toc:         left
+:toclevels:   3
+:stylesheet:  oft_spec.css
+:bib_arc42:   https://arc42.org
+:bib_srs:     link:system_requirements.adoc
+:bib_abnf:    https://www.rfc-editor.org/rfc/rfc5234.html
+
+== Introduction
+
+=== Acknowledgments
+
+This documents structure is derived from the {bib_arc42}[arc42] architectural template by Dr. Gernot Starke, Dr. Peter Hruschka.
+
+If you build your own modifications based on this document, please keep the attrbiutions.
+
+=== Terminology
+
+The terminology from the {bib_srs}[system requirement specification] applies.
+
+=== Conventions
+
+==== Syntax Definitions
+Syntax definitions in this document use the {bib_abnf}[Augmented Backus-Naur Form].
+
+The following definitions are used frequently throughout the document:
+
+* ANY - any valid character
+* LINEBREAK = the line break character of the platform
+
+== Constraints
+
+== Solution Ideas and Strategy
+
+=== Embedding Specification Item Information into AsciiDoc
+
+AsciiDoc allows https://docs.asciidoctor.org/asciidoc/latest/attributes/element-attributes/[_attributes_] to be assigned to a document's block and inline elements using an _attribute list_.
+
+An AsciiDoc block can be marked up to contain OFT specification item information by means of assigning a corresponding _role attribute_ to its attribute list.
+The specification item information can then be encoded into _named attributes_ and/or inline elements of the block which in turn can be marked up using corresponding role attributes.
+
+== Context
+
+=== Technical Constraints
+
+The plugin must be implemented in Java in order to work with the OFT engine.
+
+=== Conventions
+
+== Building Block View
+
+=== AsciiDoc Importer
+
+The AsciiDoc Importer reads specification items from ASciiDoc files.
+
+== Runtime View
+
+=== Import
+
+The OFT engine discovers the AsciiDoc Importer during startup by means of Java's Service Discovery mechanism. The OFT engine then invokes the importer for all files having an `.adoc` extension to read specification items from the files. The importer emits corresponding events that are consumed by the OFT engine's [import event listener](#import-event-listener).
+
+Common parts of the import like filtering out unnecessary items or attributes are handled by the listener.
+
+== Deployment View
+
+The AsciiDoc Importer is provided by means of a set of Java Archive (jar) files.
+
+== Concepts
+
+[.specitem, oft-skipped="dsn", oft-needs="impl, utest", oft-covers="req~asciidoc-file-extensions~1"]
+--
+--
+
+== Data Structures
+
+=== AsciiDoc-style Structures
+
+[.specitem, oft-sid="dsn~adoc-specification-item-markup~1", oft-covers="req~asciidoc-standard-syntax~1", oft-needs="impl, utest"]
+==== AsciiDoc Specification Item Markup
+
+A block or inline element of an AsciiDoc document is marked up as an _AsciiDoc specification item_ by means of assigning the `.specitem` _role attribute_ to it.
+
+.Example
+[example]
+----
+[.specitem, oft-sid="req~first-requirement~1", oft-needs="dsn"]
+== First Requirement
+
+This is the specification item's description.
+----
+
+[.specitem, oft-sid="dsn~adoc-specification-item-id~1", oft-covers="req~asciidoc-standard-syntax~1", oft-needs="impl, utest"]
+==== AsciiDoc Specification Item ID
+
+The identifier of an AsciiDoc specification item is set by means of assigning the `oft-sid` _named attribute_ to it.
+The value of the attribute is a standard OFT specification item ID.
+
+.Example
+[example]
+----
+[.specitem, oft-sid="req~first-requirement~1", oft-needs="dsn"]
+== First Requirement
+
+This is the description of the first requirement.
+----
+
+.Rationale
+[.rationale]
+Using a named attribute for setting the specification item ID allows to easily retrieve the ID from a block using the existing AsciiDoctorJ API.
+
+[.specitem, oft-sid="dsn~adoc-specification-item-title~1", oft-covers="req~asciidoc-standard-syntax~1, req~asciidoc-outline-readable~1", oft-needs="impl, utest"]
+==== AsciiDoc Specification Item Title
+
+If the block or inline element marked up as a specification item has an AsciiDoc title, then the AsciiDoc title is used as the title for the specification item.
+
+.Rationale
+[.rationale]
+AsciiDoc titles show up in the outline and are a natural way of defining a requirement title.
+
+[.specitem, oft-sid="dsn~adoc-specification-item-description~1", oft-covers="req~asciidoc-standard-syntax~1", oft-needs="impl, utest"]
+==== AsciiDoc Specification Item Description
+
+If the first nested block inside the AsciiDoc specification item has no `.rationale` nor `.comment` role attribute, then it is used as the specification item description. Otherwise, the first nested block having the `.description` role attribute is used. If no such block exists, the specification item has no description.
+
+.Implicit Description
+[example]
+----
+[.specitem, oft-sid="req~first-requirement~1", oft-needs="dsn"]
+== First Requirement
+
+The description is taken from the first block.
+----
+
+.Explicit Description
+[example]
+----
+[.specitem, oft-sid="req~first-requirement~1", oft-needs="dsn"]
+== First Requirement
+
+.Description
+[.description]
+The description is contained in a delimited block with the `.description` role attribute.
+----
+
+[.specitem, oft-sid="dsn~adoc-specification-item-rationale~1", oft-covers="req~asciidoc-standard-syntax~1", oft-needs="impl, utest"]
+==== AsciiDoc Specification Item Rationale
+
+The rationale for an AsciiDoc specification item can be provided by means of adding a delimited block to it which has the `.rationale` role attribute.
+
+.Example
+[example]
+----
+[.specitem, oft-sid="req~first-requirement~1", oft-needs="dsn"]
+== First Requirement
+
+This is the specification item's description.
+
+.Rationale
+[.rationale]
+The reason for this requirement is ...
+----
+
+[.specitem, oft-sid="dsn~adoc-specification-item-comment~1", oft-covers="req~asciidoc-standard-syntax~1", oft-needs="impl, utest"]
+==== AsciiDoc Specification Item Comment
+
+A comment can be added to an AsciiDoc specification item by means of adding a delimited block to it which has the `.comment` role attribute.
+
+.Example
+[example]
+----
+[.specitem, oft-sid="req~first-requirement~1", oft-needs="dsn"]
+== First Requirement
+
+This is the specification item's description.
+
+.Comment
+[.comment]
+On a side note, this requirement has emerged after years of experience with similar systems ...
+----
+
+[.specitem, oft-sid="dsn~adoc-covers-list~1", oft-covers="req~asciidoc-standard-syntax~1", oft-needs="impl, utest"]
+==== AsciiDoc "Covers" list
+
+The list of specification items covered by an AsciiDoc specification item can be set by means of assigning the `oft-covers` _named attribute_ to it. The value of the attribute is a comma separated list of `requirement-id`s.
+
+.Example
+[example]
+----
+[.specitem, oft-sid="req~first-requirement~1", oft-needs="dsn"]
+== First Requirement
+
+[.specitem, oft-sid="dsn~first-design-item~1", oft-needs="impl, utest", oft-covers="req~first-requirement~1"]
+== First Design Item
+----
+
+.Rationale
+[.rationale]
+Specifying the covered specification items by means of an attribute has the advantage of not being rendered by standard AsciiDoc processors and thus not cluttering the output with (meaningless) identifiers.
+
+[.specitem, oft-sid="dsn~adoc-depends-list~1", oft-covers="req~asciidoc-standard-syntax~1", oft-needs="impl, utest"]
+==== AsciiDoc "Depends" list
+
+The list of specification items that an AsciiDoc specification item depends on can be set by means of assigning the `oft-depends` _named attribute_ to it. The value of the attribute is a comma separated list of `requirement-id`s.
+
+.Example
+[example]
+----
+[.specitem, oft-sid="req~first-requirement~1", oft-needs="dsn"]
+== First Requirement
+
+This is the description of the first requirement.
+
+[.specitem, oft-sid="req~second-requirement~1", oft-needs="dsn", oft-depends="req~first-requirement~1"]
+== Second Requirement
+
+This is the description of the second requirement.
+----
+
+.Rationale
+[.rationale]
+Specifying the depended upon specification items by means of an attribute has the advantage of not being rendered by standard AsciiDoc processors and thus not cluttering the output with (meaningless) identifiers.
+
+[.specitem, oft-sid="dsn~adoc-needs-coverage-list~1", oft-covers="req~asciidoc-standard-syntax~1", oft-needs="impl, utest"]
+==== AsciiDoc "Needs" List
+
+The list of artifact types that are needed to fully cover an AsciiDoc specification item can be set by means of assigning the `oft-needs` _named attribute_ to it. The value of the attribute is a comma separated list of artifact types.
+
+.Example
+[example]
+----
+[.specitem, oft-sid="dsn~first-design-item~1", oft-needs="impl, utest"]
+== First Design Item
+
+This is the description of the first design item.
+----
+
+
+[.specitem, oft-sid="dsn~adoc-artifact-forwarding-notation~1", oft-covers="req~artifact-type-forwarding-in-asciidoc~1", oft-needs="impl, utest"]
+==== AsciiDoc Artifact Forwarding Notation
+
+The AsciiDoc Importer forwarding required coverage from one artifact type to one or more different artifact types by means of adding an empty block with the following attribute list:
+
+1. The `.specitem` role.
+2. The `oft-skipped` named attribute. The value of the attribute is artifact type being skipped,
+3. The `oft-needs` named attribute. The value of the attribute is a comma separated list of artifact types to forward to.
+4. The `oft-covered` named attribute. The value of the attribute is the specification item ID being covered.
+
+.Example
+[example]
+----
+[.specitem, oft-skipped="dsn", oft-needs="impl, utest", oft-covered="req~first-requirement~1"]
+--
+--
+----
+
+NOTE: The absence of the `oft-sid` attribute in this case is intentional.
+
+== Design Decisions
+
+=== Representation of Specification Item Properties in AsciiDoc
+
+The AsciiDoc Importer uses AsciiDoc Element Attributes to explicitly mark up specification item properties.
+
+Rationale:
+
+* Only the specification item's content itself (description, rationale, comments) appears in the rendered document by default
+* The specification item's properties can easily (and specifically) be retrieved using the existing AsciiDoctorJ framework's document query API
+
+==== Why is this relevant?
+
+The way that the specification item properties are represented in the AsciiDoc document determines the whole approach of retrieving and processing the information into Specifification Items. Changing this approach later on will be costly.
+
+==== Alternatives considered
+
+1. Follow the same Approach as the one taken for plain Markdown.
++
+--
+This would mean to put all data into the content of the AsciiDoc blocks and use _well known_ labels like `Rationale` or `Needs` to mark up information.
+
+Pros:
+
+* AsciiDoc specifications are consistent with specifications written in plain Markdown
+* Might be able to reuse/copy code from the Markdown Importer
+
+Cons:
+
+* Specification item identifiers cluttering the rendered document, making it hard to read
+--

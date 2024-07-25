@@ -18,6 +18,7 @@
         <oft.version>4.0.2</oft.version>
         <junit.version>5.11.0-M2</junit.version>
         <jacoco.version>0.8.12</jacoco.version>
+        <asciidoctor.version>2.5.13</asciidoctor.version>
         <sonar.organization>itsallcode</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <project.build.outputTimestamp>${git.commit.time}</project.build.outputTimestamp>
@@ -74,9 +75,25 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.asciidoctor</groupId>
+            <artifactId>asciidoctorj</artifactId>
+            <version>${asciidoctor.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.asciidoctor</groupId>
+            <artifactId>asciidoctorj-api</artifactId>
+            <version>${asciidoctor.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.itsallcode.openfasttrace</groupId>
             <artifactId>openfasttrace-api</artifactId>
             <version>${oft.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.itsallcode.openfasttrace</groupId>
+            <artifactId>openfasttrace</artifactId>
+            <version>${oft.version}</version>
+            <scope>runtime</scope>
         </dependency>
         <!-- Test dependencies -->
         <dependency>
@@ -95,6 +112,12 @@
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-params</artifactId>
             <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <version>5.11.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>

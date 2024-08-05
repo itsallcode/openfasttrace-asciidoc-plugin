@@ -195,7 +195,7 @@ The list of specification items covered by an AsciiDoc specification item can be
 
 .Rationale
 [.rationale]
-Specifying the covered specification items by means of an attribute has the advantage of not being rendered by standard AsciiDoc processors and thus not cluttering the output with (meaningless) identifiers.
+Refererencing the covered specification items by means of an attribute has the advantage of not being rendered by standard AsciiDoc processors and thus not cluttering the output with (meaningless) identifiers.
 
 [.specitem, oft-sid="dsn~adoc-depends-list~1", oft-covers="req~asciidoc-standard-syntax~1", oft-needs="impl, utest"]
 ==== AsciiDoc "Depends" list
@@ -218,12 +218,12 @@ This is the description of the second requirement.
 
 .Rationale
 [.rationale]
-Specifying the depended upon specification items by means of an attribute has the advantage of not being rendered by standard AsciiDoc processors and thus not cluttering the output with (meaningless) identifiers.
+Referencing the depended upon specification items by means of an attribute has the advantage of not being rendered by standard AsciiDoc processors and thus not cluttering the output with (meaningless) identifiers.
 
 [.specitem, oft-sid="dsn~adoc-needs-coverage-list~1", oft-covers="req~asciidoc-standard-syntax~1", oft-needs="impl, utest"]
 ==== AsciiDoc "Needs" List
 
-The list of artifact types that are needed to fully cover an AsciiDoc specification item can be set by means of assigning the `oft-needs` _named attribute_ to it. The value of the attribute is a comma separated list of artifact types.
+The list of artifact types that are needed to fully cover another specification item can be set by means of assigning the `oft-needs` _named attribute_ to it. The value of the attribute is a comma separated list of artifact types.
 
 .Example
 [example]
@@ -238,7 +238,7 @@ This is the description of the first design item.
 [.specitem, oft-sid="dsn~adoc-artifact-forwarding-notation~1", oft-covers="req~artifact-type-forwarding-in-asciidoc~1", oft-needs="impl, utest"]
 ==== AsciiDoc Artifact Forwarding Notation
 
-The AsciiDoc Importer forwarding required coverage from one artifact type to one or more different artifact types by means of adding an empty block with the following attribute list:
+The AsciiDoc Importer supports forwarding required coverage from one artifact type to one or more different artifact types by means of adding an empty block with the following attribute list:
 
 1. The `.specitem` role.
 2. The `oft-skipped` named attribute. The value of the attribute is artifact type being skipped,
@@ -263,7 +263,7 @@ The AsciiDoc Importer uses AsciiDoc Element Attributes to explicitly mark up spe
 
 Rationale:
 
-* Only the specification item's content itself (description, rationale, comments) appears in the rendered document by default
+* Only the specification item's content itself (description, rationale, comments) appears in the rendered document by default. This should also help with authoring specifications using languages other than English.
 * The specification item's properties can easily (and specifically) be retrieved using the existing AsciiDoctorJ framework's document query API
 
 ==== Why is this relevant?
@@ -286,3 +286,27 @@ Cons:
 
 * Specification item identifiers cluttering the rendered document, making it hard to read
 --
+
+[.specitem, oft-sid="dsn~asciidoc-utf8-support~1", oft-covers="req~asciidoc-utf8-support~1"]
+=== AsciiDoc Parsing
+
+The AsciiDoc Importer uses the https://github.com/asciidoctor/asciidoctorj[AsciiDoctorJ] library for parsing specification items from AsciiDoc files.
+
+Rationale:
+
+* Using an AsciiDoc parser library makes it easy to extract information contained in standard AsciiDoc document elements like _blocks, attributes, sections_ etc.
+* Given that the Importer itself is implemented in Java, using a Java-based parser library makes it very easy to integrate.
+* The https://asciidoctor.org[Asciidoctor project] provides a popular Ruby-based processing and publishing framework for AsciiDoc. It also provides Java bindings by means of the https://docs.asciidoctor.org/asciidoctorj/latest/[AsciiDoctorJ library].
+* _AsciiDoctorJ_ supports reading UTF-8 encoded AsciiDoc files.
+
+==== Why is this relevant?
+
+The Importer's main function is to extract information from AsciiDoc documents. Using an existing library/tool for processing AsciiDoc has the potential to save a lot of work with implementing and testing the basic parsing functionality which is not specific to OFT.
+
+==== Alternatives considered
+
+1. Use https://github.com/asciidoctor/asciidoctor.js[AsciiDoctorJS].
++
+Cons:
+
+* Requires running JavaScript from Java which is not as well supported as using a Java library.

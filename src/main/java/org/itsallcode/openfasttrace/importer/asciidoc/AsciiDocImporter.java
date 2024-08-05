@@ -57,10 +57,10 @@ class AsciiDocImporter implements Importer
         return Optional.ofNullable(block.getAttribute(attributeName))
                 .filter(String.class::isInstance)
                 .map(String.class::cast)
-                .map(s -> StreamSupport.stream(Arrays.spliterator(s.split(",")), false)
+                .map(stringAttribute -> StreamSupport.stream(Arrays.spliterator(stringAttribute.split(",")), false)
                         .map(String::trim)
                         .toList())
-                .orElseGet(List::of);
+                .orElseGet(Collections::emptyList);
     }
 
     private static List<String> getCoveredIds(final StructuralNode block)
@@ -85,7 +85,7 @@ class AsciiDocImporter implements Importer
                     .filter(String.class::isInstance)
                     .map(String.class::cast);
         default:
-            LOG.info(() -> "'%s' content model not (yet) supported [%s]".formatted(node.getContentModel(),
+            LOG.fine(() -> "'%s' content model not (yet) supported [%s]".formatted(node.getContentModel(),
                     getLocation(node)));
             return Optional.empty();
         }
@@ -108,7 +108,7 @@ class AsciiDocImporter implements Importer
     private void processSpecificationItemDepends(final StructuralNode block)
     {
         getAttributeValueAsList(block, ATTRIBUTE_OFT_DEPENDS).stream()
-                .map(sid -> new SpecificationItemId.Builder(sid).build())
+                .map(dependsOnId -> new SpecificationItemId.Builder(dependsOnId).build())
                 .forEach(this.listener::addDependsOnId);
     }
 
@@ -123,14 +123,15 @@ class AsciiDocImporter implements Importer
     private void processSpecificationItemCovers(final StructuralNode block)
     {
         getCoveredIds(block).stream()
-                .map(sid -> new SpecificationItemId.Builder(sid).build())
+                .map(coversId -> new SpecificationItemId.Builder(coversId).build())
                 .forEach(this.listener::addCoveredId);
     }
 
     // [impl->dsn~adoc-specification-item-description~1]
     private void processSpecificationItemDescription(final StructuralNode block)
     {
-        final var descriptionBlock = block.findBy(Map.of(KEY_ROLE, ROLE_DESCRIPTION)).stream().findFirst();
+        final Optional<StructuralNode> descriptionBlock = block.findBy(Map.of(KEY_ROLE, ROLE_DESCRIPTION)).stream()
+                .findFirst();
         descriptionBlock
                 .or(() -> block.getBlocks().stream()
                         .filter(node -> !"rationale".equals(node.getRole()) && !"comment".equals(node.getRole()))
@@ -157,8 +158,8 @@ class AsciiDocImporter implements Importer
 
     private void processSpecificationItemBlock(final String sid, final StructuralNode block)
     {
-        final var specItemId = new SpecificationItemId.Builder(sid).build();
-        final var location = getLocation(block);
+        final SpecificationItemId specItemId = new SpecificationItemId.Builder(sid).build();
+        final Location location = getLocation(block);
         LOG.fine(() -> String.format("adding specification item [ID: %s, location: %s]", specItemId,
                 location));
 
@@ -177,7 +178,7 @@ class AsciiDocImporter implements Importer
 
     private void processForwardingBlock(final String skippedType, final StructuralNode block)
     {
-        final var coveredSpecItems = getCoveredIds(block);
+        final List<String> coveredSpecItems = getCoveredIds(block);
         if (coveredSpecItems.isEmpty() || coveredSpecItems.size() > 1)
         {
             LOG.severe(
@@ -187,13 +188,13 @@ class AsciiDocImporter implements Importer
                             """.formatted(getLocation(block)));
             return;
         }
-        final var coveredSid = new SpecificationItemId.Builder(coveredSpecItems.get(0)).build();
-        final var specItemId = new SpecificationItemId.Builder()
+        final SpecificationItemId coveredSid = new SpecificationItemId.Builder(coveredSpecItems.get(0)).build();
+        final SpecificationItemId specItemId = new SpecificationItemId.Builder()
                 .artifactType(skippedType)
                 .name(coveredSid.getName())
                 .revision(coveredSid.getRevision())
                 .build();
-        final var location = getLocation(block);
+        final Location location = getLocation(block);
         LOG.fine(() -> "adding forwarding specification item [ID: %s, location: %s]".formatted(specItemId,
                 location));
 
@@ -212,13 +213,13 @@ class AsciiDocImporter implements Importer
         Optional.ofNullable(block.getAttribute(ATTRIBUTE_OFT_SID))
                 .filter(String.class::isInstance)
                 .map(String.class::cast)
-                .filter(s -> !s.isBlank())
+                .filter(attributeValue -> !attributeValue.isBlank())
                 .ifPresentOrElse(
                         sid -> processSpecificationItemBlock(sid, block),
                         () -> Optional.ofNullable(block.getAttribute(ATTRIBUTE_OFT_SKIPPED))
                                 .filter(String.class::isInstance)
                                 .map(String.class::cast)
-                                .filter(s -> !s.isBlank())
+                                .filter(skippedItemAttributeValue -> !skippedItemAttributeValue.isBlank())
                                 .ifPresentOrElse(
                                         skippedType -> processForwardingBlock(skippedType, block),
                                         () -> LOG.severe(() -> """
@@ -235,12 +236,13 @@ class AsciiDocImporter implements Importer
         {
             if (this.file != null)
             {
-                LOG.fine(() -> "reading specification items from file: %s".formatted(this.file.toPath()));
+                LOG.fine(() -> "AsciiDoc Importer is reading specification items from AsciiDoc file: %s"
+                        .formatted(this.file.toPath()));
                 return asciidoctor.loadFile(this.file.toPath().toFile(), options);
             }
             else if (this.content != null)
             {
-                LOG.fine("reading specification items from document");
+                LOG.fine("AsciiDoc Importer is reading specification items from AsciiDoc document");
                 return asciidoctor.load(content, options);
             }
             else
@@ -256,9 +258,8 @@ class AsciiDocImporter implements Importer
     @Override
     public void runImport()
     {
-        final var document = parseAsciiDoc();
+        final Document document = parseAsciiDoc();
 
-        LOG.fine("processing specification item definitions");
         document.findBy(Map.of(KEY_ROLE, ROLE_SPECITEM)).forEach(node -> {
             LOG.fine(() -> String.format("found specitem block [id: %s]", node.getId()));
             processSpecificationItem(node);

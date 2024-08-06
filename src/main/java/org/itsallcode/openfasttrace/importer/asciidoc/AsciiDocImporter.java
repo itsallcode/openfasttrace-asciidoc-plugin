@@ -98,9 +98,9 @@ class AsciiDocImporter implements Importer
                 .filter(String.class::isInstance)
                 .map(String.class::cast)
                 .or(() -> Optional.ofNullable(block.getTitle()))
-                .ifPresent(s -> {
-                    LOG.fine(() -> String.format("setting spec item title: %s", s));
-                    this.listener.setTitle(s);
+                .ifPresent(title -> {
+                    LOG.fine(() -> String.format("setting spec item title: %s", title));
+                    this.listener.setTitle(title);
                 });
     }
 

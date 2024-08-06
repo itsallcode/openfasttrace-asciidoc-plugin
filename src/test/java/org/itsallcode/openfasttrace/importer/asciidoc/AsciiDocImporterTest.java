@@ -1,6 +1,7 @@
 package org.itsallcode.openfasttrace.importer.asciidoc;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.inOrder;
 
 import org.itsallcode.openfasttrace.api.core.SpecificationItemId;
@@ -164,7 +165,8 @@ public class AsciiDocImporterTest
         inOrder.verify(listener).beginSpecificationItem();
         Mockito.verify(listener)
                 .setId(new SpecificationItemId.Builder("dsn~first-requirement~1").build());
-        Mockito.verify(listener).setLocation(any());
+        Mockito.verify(listener).setLocation(
+                        argThat(location -> "verbatim".equals(location.getPath()) && location.getLine() == 6));
         Mockito.verify(listener).addNeededArtifactType("impl");
         Mockito.verify(listener).addNeededArtifactType("utest");
         Mockito.verify(listener)

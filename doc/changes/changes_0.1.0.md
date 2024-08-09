@@ -1,27 +1,11 @@
-# OpenFastTrace AsciiDoc Plugin 0.1.0, released YYYY-MM-DD
+# OpenFastTrace AsciiDoc Plugin 0.1.0, released 2024-08-09
 
-Code name: {Codename}
+Code name: Initial release
 
 ## Summary
 
-In this inaugural release of the AsciiDoc OpenFastTrace Plugin, we have established a foundation for adding, updating, and manipulating OpenFastTrace specification items directly within AsciiDoc documents.
-
-Here you can add more details about the general changes and improvements of this version.
-
-## Breaking Changes
-
-If there were significant or breaking changes made in this version, describe them here.
+In this inaugural release of the AsciiDoc OpenFastTrace Plugin, we have established a foundation for adding, updating, and manipulating OpenFastTrace specification items directly within AsciiDoc documents. Thanks to [@sophokles73](https://github.com/sophokles73) for his great contribution!
 
 ## Features
 
-* If there were any major features added in this version, list them here. Each feature should contain a brief explanation and, if applicable, any issue or PR numbers related to the feature.
-
-## Bug Fixes
-
-* If there were any bugs fixed in this version, detail them here. Like the features, they should contain a concise explanation and relevant issue numbers.
-
-## Known Issues
-
-* If there are any known issues in this version that were not fixed, list them here. Provide as much detail as possible to help users understand the impact and any potential workarounds.
-
-Please replace 'YYYY-MM-DD' with the actual release date, and '{Codename}' with the actual codename for this version, if any.
+* [PR #4](https://github.com/itsallcode/openfasttrace-asciidoc-plugin/pull/4): Initial version of AsciiDoc plugin by [@sophokles73](https://github.com/sophokles73)

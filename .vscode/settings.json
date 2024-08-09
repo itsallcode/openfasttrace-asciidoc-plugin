@@ -14,5 +14,13 @@
     "sonarlint.connectedMode.project": {
         "connectionId": "itsallcode",
         "projectKey": "org.itsallcode:openfasttrace-asciidoc-plugin"
-    }
+    },
+    "java.format.settings.url": "doc/itsallcode_formatter.xml",
+    "java.test.config": {
+        "name": "openfasttrace",
+        "vmArgs": [
+            "-Djava.util.logging.config.file=src/test/resources/logging.properties"
+        ]
+    },
+    "asciidoc.antora.enableAntoraSupport": false
 }

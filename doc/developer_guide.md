@@ -24,34 +24,40 @@ dependencies {
 
 ## Dependencies
 
-### Runtime Dependencies
-
-| Dependency | Purpose | License |
-|------------|---------|---------|
-| TBD        | TBD     | TBD     |
-
 ### Build Dependencies
 
-| Dependency | Purpose | License |
-|------------|---------|---------|
-| TBD        | TBD     | TBD     |
+The list below shows all build time dependencies in alphabetical order. Note that except the Maven build tool all required modules are downloaded automatically by Maven.
+
+| Dependency                                                        | Purpose                               | License                       |
+| ----------------------------------------------------------------- | ------------------------------------- | ----------------------------- |
+| [Apache Maven](https://maven.apache.org/)                         | Build tool                            | Apache License 2.0            |
+| [AsciiDoctorJ](https://docs.asciidoctor.org/asciidoctorj/latest/) | Framework for parsing AsciiDoc        | Apache License 2.0            |
+| [OpenFastTrace API](https://github.com/itsallcode/openfasttrace)  | Interface to the OpenFaceTrace engine | GNU General Public License V3 |
 
 ### Test Dependencies
 
-| Dependency | Purpose | License |
-|------------|---------|---------|
-| TBD        | TBD     | TBD     |
+| Dependency                                                                   | Purpose                                 | License                       |
+| ---------------------------------------------------------------------------- | --------------------------------------- | ----------------------------- |
+| [Hamcrest Auto Matcher](https://github.com/itsallcode/hamcrest-auto-matcher) | Speed-up for building Hamcrest matchers | GNU General Public License V3 |
+| [JUnit](https://junit.org/junit5)                                            | Unit testing framework                  | Eclipse Public License 1.0    |
+| [Mockito](https://github.com/mockito/mockito)                                | Mocking framework                       | MIT License                   |
+
+### Runtime Dependencies
+
+| Dependency                                                   | Purpose                  | License                       |
+| ------------------------------------------------------------ | ------------------------ | ----------------------------- |
+| [OpenFastTrace](https://github.com/itsallcode/openfasttrace) | The OpenFaceTrace engine | GNU General Public License V3 |
 
 ### Preparations
 
-<!-- Description -->
+OpenFastTrace uses [Apache Maven](https://maven.apache.org) as technical project management tool that resolves and downloads the build-dependencies before building the packages.
 
 ### Installation of Initial Build Dependencies on Linux
 
 #### Debian or Ubuntu
 
 ```bash
-apt-get install openjdk-11-jdk maven
+apt-get install openjdk-17-jdk maven
 ```
 
 ## Configure Maven Toolchains

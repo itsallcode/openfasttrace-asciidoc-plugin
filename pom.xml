@@ -358,6 +358,8 @@
                     <systemPropertyVariables>
                         <java.util.logging.config.file>src/test/resources/logging.properties</java.util.logging.config.file>
                     </systemPropertyVariables>
+                    <!-- Suppress warning "A Java agent has been loaded dynamically" about byte-buddy-agent -->
+                    <argLine>-XX:+EnableDynamicAgentLoading ${argLine}</argLine>
                 </configuration>
             </plugin>
             <plugin>

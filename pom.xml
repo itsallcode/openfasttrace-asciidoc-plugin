@@ -4,7 +4,7 @@
 
     <groupId>org.itsallcode</groupId>
     <artifactId>openfasttrace-asciidoc-plugin</artifactId>
-    <version>0.1.0</version>
+    <version>0.2.0</version>
     <packaging>jar</packaging>
 
     <name>OpenFastTrace AsciiDoc Importer</name>
@@ -16,7 +16,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>17</java.version>
         <oft.version>4.0.2</oft.version>
-        <junit.version>5.11.0-M2</junit.version>
+        <junit.version>5.11.0-RC1</junit.version>
         <jacoco.version>0.8.12</jacoco.version>
         <asciidoctor.version>2.5.13</asciidoctor.version>
         <sonar.organization>itsallcode</sonar.organization>
@@ -78,34 +78,31 @@
             <groupId>org.asciidoctor</groupId>
             <artifactId>asciidoctorj</artifactId>
             <version>${asciidoctor.version}</version>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.asciidoctor</groupId>
             <artifactId>asciidoctorj-api</artifactId>
             <version>${asciidoctor.version}</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.itsallcode.openfasttrace</groupId>
             <artifactId>openfasttrace-api</artifactId>
             <version>${oft.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.itsallcode.openfasttrace</groupId>
-            <artifactId>openfasttrace</artifactId>
+            <artifactId>openfasttrace-core</artifactId>
             <version>${oft.version}</version>
-            <scope>runtime</scope>
+            <scope>provided</scope>
         </dependency>
         <!-- Test dependencies -->
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest</artifactId>
-            <version>2.2</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-            <version>${junit.version}</version>
+            <version>3.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -117,7 +114,7 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-junit-jupiter</artifactId>
-            <version>5.11.0</version>
+            <version>5.12.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -286,9 +283,25 @@
                     <doclint></doclint>
                     <serialwarn>true</serialwarn>
                     <failOnError>true</failOnError>
-                    <!-- Generated class HelpMojo causes warning: use of default constructor, which does not provide a comment -->
-                    <failOnWarnings>false</failOnWarnings>
+                    <failOnWarnings>true</failOnWarnings>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.6.0</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <createDependencyReducedPom>false</createDependencyReducedPom>
+                            <outputFile>${project.build.directory}/${project.artifactId}-${version}-with-dependencies.jar</outputFile>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.jacoco</groupId>
@@ -360,6 +373,31 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.basepom.maven</groupId>
+                <artifactId>duplicate-finder-maven-plugin</artifactId>
+                <version>2.0.1</version>
+                <executions>
+                    <execution>
+                        <id>default</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <printEqualFiles>true</printEqualFiles>
+                    <failBuildInCaseOfDifferentContentConflict>true</failBuildInCaseOfDifferentContentConflict>
+                    <failBuildInCaseOfEqualContentConflict>true</failBuildInCaseOfEqualContentConflict>
+                    <failBuildInCaseOfConflict>true</failBuildInCaseOfConflict>
+                    <checkCompileClasspath>true</checkCompileClasspath>
+                    <checkRuntimeClasspath>true</checkRuntimeClasspath>
+                    <checkTestClasspath>false</checkTestClasspath>
+                    <preferLocal>true</preferLocal>
+                    <useResultFile>false</useResultFile>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

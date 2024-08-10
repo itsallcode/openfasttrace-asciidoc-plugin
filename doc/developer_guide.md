@@ -10,7 +10,7 @@ This guide provides technical information for developers who want to contribute 
 <dependency>
     <groupId>org.itsallcode</groupId>
     <artifactId>openfasttrace-asciidoc-plugin</artifactId>
-    <version>0.1.0</version>
+    <version>0.2.0</version>
 </dependency>
 ```
 
@@ -18,7 +18,7 @@ This guide provides technical information for developers who want to contribute 
 
 ```groovy
 dependencies {
-    compile 'org.itsallcode:openfasttrace-asciidoc-plugin:0.1.0'
+    compile 'org.itsallcode:openfasttrace-asciidoc-plugin:0.2.0'
 }
 ```
 

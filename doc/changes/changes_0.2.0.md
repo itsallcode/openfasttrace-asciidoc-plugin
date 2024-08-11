@@ -1,6 +1,6 @@
-# OpenFastTrace AsciiDoc Plugin 0.2.0, released 2024-08-10
+# OpenFastTrace AsciiDoc Plugin 0.2.0, released 2024-08-11
 
-Code name: Jar with dependencies
+Code name: JAR with dependencies
 
 ## Summary
 

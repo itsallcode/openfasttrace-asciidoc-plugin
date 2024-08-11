@@ -15,7 +15,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>17</java.version>
-        <oft.version>4.0.2</oft.version>
+        <oft.version>4.1.0</oft.version>
         <junit.version>5.11.0-RC1</junit.version>
         <jacoco.version>0.8.12</jacoco.version>
         <asciidoctor.version>2.5.13</asciidoctor.version>

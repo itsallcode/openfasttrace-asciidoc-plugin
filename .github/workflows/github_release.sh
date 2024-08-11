@@ -14,7 +14,7 @@ readonly project_version
 echo "Read project version '$project_version' from $pom_file"
 
 # Calculate checksum
-readonly artifact_path="$base_dir/target/openfasttrace-asciidoc-plugin-${project_version}.jar"
+readonly artifact_path="$base_dir/target/openfasttrace-asciidoc-plugin-${project_version}-with-dependencies.jar"
 echo "Calculate sha256sum for file '$artifact_path'"
 file_dir="$(dirname "$artifact_path")"
 readonly file_dir

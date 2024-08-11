@@ -11,6 +11,7 @@ _[Place a screenshot of a tracing report generated using this plugin here]_
 ## Project Information
 
 [![Build](https://github.com/itsallcode/openfasttrace-asciidoc-plugin/actions/workflows/build.yml/badge.svg)](https://github.com/itsallcode/openfasttrace-asciidoc-plugin/actions/workflows/build.yml)
+[![Maven Central Version](https://img.shields.io/maven-central/v/org.itsallcode/openfasttrace-asciidoc-plugin)](https://search.maven.org/artifact/org.itsallcode/openfasttrace-asciidoc-plugin)
 
 Sonarcloud status:
 

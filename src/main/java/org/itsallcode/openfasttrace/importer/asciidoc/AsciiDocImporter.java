@@ -21,6 +21,7 @@ class AsciiDocImporter implements Importer
     private static final String ATTRIBUTE_OFT_NEEDS = "oft-needs";
     private static final String ATTRIBUTE_OFT_SID = "oft-sid";
     private static final String ATTRIBUTE_OFT_SKIPPED = "oft-skipped";
+    private static final String ATTRIBUTE_OFT_TAGS = "oft-tags";
     private static final String ATTRIBUTE_OFT_TITLE = "oft-title";
 
     private static final String CONTENT_MODEL_SIMPLE = "simple";
@@ -127,6 +128,13 @@ class AsciiDocImporter implements Importer
                 .forEach(this.listener::addCoveredId);
     }
 
+    // [impl->dsn~adoc-tags-list~1]
+    private void processSpecificationItemTags(final StructuralNode block)
+    {
+        getAttributeValueAsList(block, ATTRIBUTE_OFT_TAGS)
+                .forEach(this.listener::addTag);
+    }
+
     // [impl->dsn~adoc-specification-item-description~1]
     private void processSpecificationItemDescription(final StructuralNode block)
     {
@@ -170,6 +178,7 @@ class AsciiDocImporter implements Importer
         processSpecificationItemDepends(block);
         processSpecificationItemNeeds(block);
         processSpecificationItemCovers(block);
+        processSpecificationItemTags(block);
         processSpecificationItemDescription(block);
         processSpecificationItemRationale(block);
         processSpecificationItemComment(block);

@@ -234,6 +234,19 @@ The list of artifact types that are needed to fully cover another specification 
 This is the description of the first design item.
 ----
 
+[.specitem, oft-sid="dsn~adoc-tags-list~1", oft-covers="req~asciidoc-standard-syntax~1", oft-needs="impl, utest"]
+==== AsciiDoc "Tags" List
+
+The list of tags that apply to a specification item can be set by means of assigning the `oft-tags` _named attribute_ to it. The value of the attribute is a comma separated list of tags.
+
+.Example
+[example]
+----
+[.specitem, oft-sid="dsn~first-design-item~1", oft-needs="impl, utest", oft-tags="Priority1"]
+== First Design Item
+
+This is the description of the first design item.
+----
 
 [.specitem, oft-sid="dsn~adoc-artifact-forwarding-notation~1", oft-covers="req~artifact-type-forwarding-in-asciidoc~1", oft-needs="impl, utest"]
 ==== AsciiDoc Artifact Forwarding Notation

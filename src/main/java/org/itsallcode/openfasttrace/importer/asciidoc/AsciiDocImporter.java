@@ -1,13 +1,13 @@
 package org.itsallcode.openfasttrace.importer.asciidoc;
 
 import java.util.*;
+import java.util.List;
 import java.util.logging.Logger;
 import java.util.stream.StreamSupport;
 
 import org.asciidoctor.Asciidoctor;
 import org.asciidoctor.Options;
-import org.asciidoctor.ast.Document;
-import org.asciidoctor.ast.StructuralNode;
+import org.asciidoctor.ast.*;
 import org.itsallcode.openfasttrace.api.core.Location;
 import org.itsallcode.openfasttrace.api.core.SpecificationItemId;
 import org.itsallcode.openfasttrace.api.importer.ImportEventListener;
@@ -31,7 +31,8 @@ class AsciiDocImporter implements Importer
     private static final String ROLE_COMMENT = ":comment";
     private static final String ROLE_DESCRIPTION = ":description";
     private static final String ROLE_RATIONALE = ":rationale";
-    private static final String ROLE_SPECITEM = ":specitem";
+
+    private static final String ROLE_NAME_SPECITEM = "specitem";
 
     private static final Logger LOG = Logger.getLogger(AsciiDocImporter.class.getName());
 
@@ -219,6 +220,9 @@ class AsciiDocImporter implements Importer
     // [impl->dsn~adoc-artifact-forwarding-notation~1]
     private void processSpecificationItem(final StructuralNode block)
     {
+        LOG.fine(() -> String.format("found specitem block [id: %s]",
+                block.getId()));
+
         Optional.ofNullable(block.getAttribute(ATTRIBUTE_OFT_SID))
                 .filter(String.class::isInstance)
                 .map(String.class::cast)
@@ -235,6 +239,41 @@ class AsciiDocImporter implements Importer
                                                 Cannot process .specitem [%s]. A .specitem block must \
                                                 have either an 'oft-sid' or an 'oft-skipped' attribute.
                                                 """.formatted(getLocation(block)))));
+    }
+
+    private void processDocument(final Document document)
+    {
+        document.getBlocks().forEach(this::processBlock);
+    }
+
+    private void processBlock(final StructuralNode block)
+    {
+        if (block.hasRole(ROLE_NAME_SPECITEM))
+        {
+            processSpecificationItem(block);
+        }
+        else if (block instanceof final Table table)
+        {
+            processTable(table);
+        }
+        else
+        {
+            block.getBlocks().forEach(this::processBlock);
+        }
+    }
+
+    private void processTable(final Table table)
+    {
+        table.getBody().forEach(row -> row.getCells().forEach(cell -> {
+            final Document innerDocument = cell.getInnerDocument();
+            if (innerDocument != null)
+            {
+                // if the cell has the Asciidoc style, then the content
+                // is itself an Asciidoc Document that may contain
+                // specification items
+                processDocument(innerDocument);
+            }
+        }));
     }
 
     // [impl->dsn~adoc-specification-item-markup~1]
@@ -268,10 +307,6 @@ class AsciiDocImporter implements Importer
     public void runImport()
     {
         final Document document = parseAsciiDoc();
-
-        document.findBy(Map.of(KEY_ROLE, ROLE_SPECITEM)).forEach(node -> {
-            LOG.fine(() -> String.format("found specitem block [id: %s]", node.getId()));
-            processSpecificationItem(node);
-        });
+        processDocument(document);
     }
 }

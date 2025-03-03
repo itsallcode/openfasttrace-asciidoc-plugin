@@ -1,4 +1,4 @@
-# OpenFastTrace AsciiDoc Plugin 0.3.0, released YYYY-MM-DD
+# OpenFastTrace AsciiDoc Plugin 0.3.0, released 2025-03-04
 
 Code name: Add support for Tags
 
@@ -9,3 +9,7 @@ Starting with this release, OpenFastTrace Tags can be set on specification items
 ## Features
 
 * [Issue #7](https://github.com/itsallcode/openfasttrace-asciidoc-plugin/issues/7): Add support for specifying OpenFastTrace Tags on specitems
+
+## Bug Fixes
+
+* [Issue #8](https://github.com/itsallcode/openfasttrace-asciidoc-plugin/issues/8): Asciidoc importer does not read specification items defined in table cells

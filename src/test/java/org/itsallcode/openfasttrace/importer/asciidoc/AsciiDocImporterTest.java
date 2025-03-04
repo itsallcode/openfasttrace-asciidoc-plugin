@@ -66,7 +66,7 @@ public class AsciiDocImporterTest
             """
                     # Spec
 
-                    [.specitem, oft-sid="dsn~detail-design~1", oft-depends="dsn~grand-design~1, arch~general-constraints~1", oft-needs="impl, utest", oft-covers="req~first-requirement~1, req~second-requirement~1"]
+                    [.specitem, oft-sid="dsn~detail-design~1", oft-depends="dsn~grand-design~1, arch~general-constraints~1", oft-needs="impl, utest", oft-covers="req~first-requirement~1, req~second-requirement~1", oft-tags="Priority1, OtherComponent"]
                     ## A Requirement
 
                     The description
@@ -80,7 +80,7 @@ public class AsciiDocImporterTest
             """
                     # Spec
 
-                    [.specitem, oft-sid="dsn~detail-design~1", oft-depends="dsn~grand-design~1, arch~general-constraints~1", oft-needs="impl, utest", oft-covers="req~first-requirement~1, req~second-requirement~1"]
+                    [.specitem, oft-sid="dsn~detail-design~1", oft-depends="dsn~grand-design~1, arch~general-constraints~1", oft-needs="impl, utest", oft-covers="req~first-requirement~1, req~second-requirement~1", oft-tags="Priority1, OtherComponent"]
                     ## A Requirement
 
                     [.rationale]
@@ -96,7 +96,7 @@ public class AsciiDocImporterTest
                     # Spec
 
                     .A Requirement
-                    [.specitem, oft-sid="dsn~detail-design~1", oft-depends="dsn~grand-design~1, arch~general-constraints~1", oft-needs="impl, utest", oft-covers="req~first-requirement~1, req~second-requirement~1"]
+                    [.specitem, oft-sid="dsn~detail-design~1", oft-depends="dsn~grand-design~1, arch~general-constraints~1", oft-needs="impl, utest", oft-covers="req~first-requirement~1, req~second-requirement~1", oft-tags="Priority1, OtherComponent"]
                     ====
 
                     The description
@@ -112,7 +112,7 @@ public class AsciiDocImporterTest
                     # Spec
 
                     .A Requirement
-                    [.specitem, oft-sid="dsn~detail-design~1", oft-depends="dsn~grand-design~1, arch~general-constraints~1", oft-needs="impl, utest", oft-covers="req~first-requirement~1, req~second-requirement~1"]
+                    [.specitem, oft-sid="dsn~detail-design~1", oft-depends="dsn~grand-design~1, arch~general-constraints~1", oft-needs="impl, utest", oft-covers="req~first-requirement~1, req~second-requirement~1", oft-tags="Priority1, OtherComponent"]
                     ====
 
                     [.rationale]
@@ -140,6 +140,8 @@ public class AsciiDocImporterTest
         Mockito.verify(listener).addNeededArtifactType("utest");
         Mockito.verify(listener).addCoveredId(new SpecificationItemId.Builder("req~first-requirement~1").build());
         Mockito.verify(listener).addCoveredId(new SpecificationItemId.Builder("req~second-requirement~1").build());
+        Mockito.verify(listener).addTag("Priority1");
+        Mockito.verify(listener).addTag("OtherComponent");
         Mockito.verify(listener).appendDescription("The description");
         Mockito.verify(listener).appendRationale("The rationale");
         Mockito.verify(listener).appendComment("A comment");

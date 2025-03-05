@@ -1,4 +1,4 @@
-# OpenFastTrace AsciiDoc Plugin 0.3.0, released 2025-03-04
+# OpenFastTrace AsciiDoc Plugin 0.3.0, released 2025-03-05
 
 Code name: Add support for Tags
 

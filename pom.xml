@@ -18,6 +18,7 @@
         <oft.version>4.4.0</oft.version>
         <junit.version>6.0.3</junit.version>
         <jacoco.version>0.8.14</jacoco.version>
+        <!-- Upgrading to 3.0.1 causes test failures, see https://github.com/itsallcode/openfasttrace-asciidoc-plugin/issues/19 -->
         <asciidoctor.version>3.0.0</asciidoctor.version>
         <sonar.organization>itsallcode</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
@@ -347,6 +348,18 @@
                     </execution>
                 </executions>
             </plugin>
+             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.10.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>properties</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -356,7 +369,7 @@
                         <java.util.logging.config.file>src/test/resources/logging.properties</java.util.logging.config.file>
                     </systemPropertyVariables>
                     <!-- Suppress warning "A Java agent has been loaded dynamically" about byte-buddy-agent -->
-                    <argLine>-XX:+EnableDynamicAgentLoading ${argLine}</argLine>
+                    <argLine>@{argLine} -javaagent:${org.mockito:mockito-core:jar}</argLine>
                 </configuration>
             </plugin>
             <plugin>

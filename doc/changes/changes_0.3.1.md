@@ -8,4 +8,4 @@ This release updates dependencies and uses the new Maven Central Portal publishi
 
 ## Bug Fixes
 
-* [PR #](https://github.com/itsallcode/openfasttrace-asciidoc-plugin/): Updated dependencies
+* [PR #18](https://github.com/itsallcode/openfasttrace-asciidoc-plugin/pull/18): Updated dependencies

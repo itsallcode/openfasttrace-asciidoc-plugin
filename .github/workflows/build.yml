@@ -78,7 +78,7 @@ jobs:
             -DossindexSkip=true \
             -Djava.version=${{ matrix.java }}
 
-ossindex:
+  ossindex:
     runs-on: ubuntu-latest
     permissions:
       contents: read

@@ -22,6 +22,7 @@
         <sonar.organization>itsallcode</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <project.build.outputTimestamp>${git.commit.time}</project.build.outputTimestamp>
+        <ossindexSkip>false</ossindexSkip>
     </properties>
 
     <licenses>
@@ -362,6 +363,10 @@
                 <groupId>org.sonatype.ossindex.maven</groupId>
                 <artifactId>ossindex-maven-plugin</artifactId>
                 <version>3.2.0</version>
+                <configuration>
+                    <authId>ossindex</authId>
+                    <skip>${ossindexSkip}</skip>
+                </configuration>
                 <executions>
                     <execution>
                         <id>audit</id>

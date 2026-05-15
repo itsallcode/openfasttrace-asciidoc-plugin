@@ -51,7 +51,7 @@ jobs:
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
 
       - name: Build
-        run: mvn --batch-mode -T 1C clean install
+        run: mvn --batch-mode -T 1C clean install -DossindexSkip=true
 
       - name: List secret GPG keys
         run: gpg --list-secret-keys
@@ -60,6 +60,7 @@ jobs:
         if: ${{ !inputs.skip-deploy-maven-central }}
         run: |
           mvn --batch-mode deploy -DskipTests -PcentralPublishing
+              -DossindexSkip=true \
               -DcentralPublishingDeploymentName="Deployed OFT Asciidoc Plugin via release.yml" \
               -DcentralPublishingSkipPublishing=false \
               -DcentralPublishingAutoPublish=${AUTO_PUBLISH}

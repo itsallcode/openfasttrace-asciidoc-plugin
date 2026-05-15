@@ -59,12 +59,14 @@ jobs:
     - name: Build with Java ${{ matrix.java }}
       run: |
         mvn --batch-mode -T 1C clean org.jacoco:jacoco-maven-plugin:prepare-agent install \
+            -DossindexSkip=true \
             -Djava.version=${{ matrix.java }}
 
     - name: Sonar analysis
       if: ${{ env.DEFAULT_OS == matrix.os && env.DEFAULT_JAVA == matrix.java && env.SONAR_TOKEN != null }}
       run: |
         mvn --batch-mode org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
+            -DossindexSkip=true \
             -Dsonar.token=$SONAR_TOKEN
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -73,10 +75,39 @@ jobs:
     - name: Verify reproducible build
       run: |
         mvn --batch-mode -T 1C clean verify artifact:compare -DskipTests \
+            -DossindexSkip=true \
             -Djava.version=${{ matrix.java }}
 
+ossindex:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+    - uses: actions/checkout@v6
+      with:
+        persist-credentials: false
+    - uses: actions/setup-java@v5
+      with:
+        cache: maven
+        distribution: temurin
+        java-version: 17
+        server-id: ossindex
+        server-username: OSSINDEX_USERNAME
+        server-password: OSSINDEX_TOKEN
+    - name: Ossindex
+      if: ${{ env.OSSINDEX_USERNAME != null && env.OSSINDEX_TOKEN != null }}
+      run: |
+        mvn --errors --batch-mode test-compile \
+            org.sonatype.ossindex.maven:ossindex-maven-plugin:audit \
+            org.sonatype.ossindex.maven:ossindex-maven-plugin:audit-aggregate
+      env:
+        OSSINDEX_USERNAME: ${{ secrets.OSSINDEX_USERNAME }}
+        OSSINDEX_TOKEN: ${{ secrets.OSSINDEX_TOKEN }}
+
   build:
-    needs: matrix-build
+    needs:
+      - matrix-build
+      - ossindex
     runs-on: ubuntu-slim
     permissions:
       contents: read

@@ -7,7 +7,7 @@ import org.itsallcode.openfasttrace.api.importer.input.InputFile;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-public class AsciiDocImporterFactoryTest
+class AsciiDocImporterFactoryTest
 {
     // [utest->dsn~asciidoc-file-extensions~1]
     @Test

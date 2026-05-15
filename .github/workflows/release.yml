@@ -59,7 +59,7 @@ jobs:
       - name: Publish to Maven Central Repository
         if: ${{ !inputs.skip-deploy-maven-central }}
         run: |
-          mvn --batch-mode deploy -DskipTests -PcentralPublishing
+          mvn --batch-mode deploy -DskipTests -PcentralPublishing \
               -DossindexSkip=true \
               -DcentralPublishingDeploymentName="Deployed OFT Asciidoc Plugin via release.yml" \
               -DcentralPublishingSkipPublishing=false \

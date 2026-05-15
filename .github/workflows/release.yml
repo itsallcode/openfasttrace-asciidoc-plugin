@@ -8,6 +8,11 @@ on:
         required: true
         type: boolean
         default: false
+      maven-central-auto-publish:
+        description: "Automatically publish to Maven Central"
+        required: true
+        type: boolean
+        default: true
 
 jobs:
   release:
@@ -24,7 +29,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
         with:
-          persist-credentials: false
+          persist-credentials: true
 
       - name: Fail if not running on main branch
         if: ${{ github.ref != 'refs/heads/main' }}
@@ -39,7 +44,7 @@ jobs:
           distribution: "temurin"
           java-version: 17
           cache: "maven"
-          server-id: ossrh
+          server-id: central
           server-username: MAVEN_USERNAME
           server-password: MAVEN_PASSWORD
           gpg-private-key: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
@@ -53,11 +58,16 @@ jobs:
 
       - name: Publish to Maven Central Repository
         if: ${{ !inputs.skip-deploy-maven-central }}
-        run: mvn --batch-mode deploy -DskipTests -Possrh -DstagingDescription="Deployed via GitHub workflow release.yml"
+        run: |
+          mvn --batch-mode deploy -DskipTests -PcentralPublishing
+              -DcentralPublishingDeploymentName="Deployed OFT Asciidoc Plugin via release.yml" \
+              -DcentralPublishingSkipPublishing=false \
+              -DcentralPublishingAutoPublish=${AUTO_PUBLISH}
         env:
-          MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
-          MAVEN_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
+          MAVEN_USERNAME: ${{ secrets.MAVEN_CENTRAL_PORTAL_USERNAME }}
+          MAVEN_PASSWORD: ${{ secrets.MAVEN_CENTRAL_PORTAL_TOKEN }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }}
+          AUTO_PUBLISH: ${{ inputs.maven-central-auto-publish }}
 
       - name: Create GitHub Release
         run: ./.github/workflows/github_release.sh

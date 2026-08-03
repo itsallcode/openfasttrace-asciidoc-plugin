@@ -8,9 +8,8 @@ import org.itsallcode.openfasttrace.api.importer.input.InputFile;
 /**
  * A factory for {@link AsciiDocImporter}s.
  */
-public class AsciiDocImporterFactory extends RegexMatchingImporterFactory
+public class AsciiDocImporterFactory extends AbstractRegexMatchingImporterFactory
 {
-
     /**
      * Creates a new importer for AsciiDoc files having an {@code .adoc} suffix.
      */
@@ -18,6 +17,11 @@ public class AsciiDocImporterFactory extends RegexMatchingImporterFactory
     public AsciiDocImporterFactory()
     {
         super("(?i).*\\.adoc");
+    }
+
+    @Override
+    public int getPriority() {
+        return 9100; // Behind the Gherkin importer but before the generic ones
     }
 
     @Override

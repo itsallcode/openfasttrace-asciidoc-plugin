@@ -4,7 +4,7 @@
 
     <groupId>org.itsallcode</groupId>
     <artifactId>openfasttrace-asciidoc-plugin</artifactId>
-    <version>0.3.1</version>
+    <version>0.3.2</version>
     <packaging>jar</packaging>
 
     <name>OpenFastTrace AsciiDoc Importer</name>
@@ -15,8 +15,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>17</java.version>
-        <oft.version>4.4.0</oft.version>
-        <junit.version>6.0.3</junit.version>
+        <oft.version>4.8.0</oft.version>
         <jacoco.version>0.8.14</jacoco.version>
         <!-- Upgrading to 3.0.1 causes test failures, see https://github.com/itsallcode/openfasttrace-asciidoc-plugin/issues/19 -->
         <asciidoctor.version>3.0.0</asciidoctor.version>
@@ -99,7 +98,7 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>${junit.version}</version>
+            <version>6.1.2</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -111,7 +110,7 @@
         <dependency>
             <groupId>org.jacoco</groupId>
             <artifactId>org.jacoco.agent</artifactId>
-            <version>${jacoco.version}</version>
+            <version>0.8.15</version>
             <classifier>runtime</classifier>
             <scope>test</scope>
         </dependency>
@@ -210,7 +209,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
-                <version>3.6.2</version>
+                <version>3.6.3</version>
                 <executions>
                     <execution>
                         <id>enforce-maven</id>
@@ -278,7 +277,7 @@
                 </executions>
                 <configuration>
                     <charset>UTF-8</charset>
-                    <doclint></doclint>
+                    <doclint/>
                     <serialwarn>true</serialwarn>
                     <failOnError>true</failOnError>
                     <failOnWarnings>true</failOnWarnings>
@@ -351,7 +350,7 @@
              <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
-                <version>3.10.0</version>
+                <version>3.11.0</version>
                 <executions>
                     <execution>
                         <goals>
@@ -363,7 +362,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.5.5</version>
+                <version>3.5.6</version>
                 <configuration>
                     <systemPropertyVariables>
                         <java.util.logging.config.file>src/test/resources/logging.properties</java.util.logging.config.file>
@@ -433,7 +432,7 @@
             <plugin>
                 <groupId>org.sonarsource.scanner.maven</groupId>
                 <artifactId>sonar-maven-plugin</artifactId>
-                <version>5.6.0.6792</version>
+                <version>5.7.0.6970</version>
             </plugin>
         </plugins>
     </build>

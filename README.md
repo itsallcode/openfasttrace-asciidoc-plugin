@@ -11,7 +11,7 @@ _[Place a screenshot of a tracing report generated using this plugin here]_
 ## Project Information
 
 [![Build](https://github.com/itsallcode/openfasttrace-asciidoc-plugin/actions/workflows/build.yml/badge.svg)](https://github.com/itsallcode/openfasttrace-asciidoc-plugin/actions/workflows/build.yml)
-[![Maven Central Version](https://img.shields.io/maven-central/v/org.itsallcode/openfasttrace-asciidoc-plugin)](https://search.maven.org/artifact/org.itsallcode/openfasttrace-asciidoc-plugin)
+[![Maven Central Version](https://img.shields.io/maven-central/v/org.itsallcode/openfasttrace-asciidoc-plugin)](https://central.sonatype.com/artifact/org.itsallcode/openfasttrace-asciidoc-plugin)
 
 Sonarcloud status:
 
@@ -64,7 +64,7 @@ For more detailed information on how to use OpenFastTrack with AsciiDoc Plugin, 
 
 The OpenFastTrace AsciiDoc Plugin is supplied as a Java Archive (JAR) which can be obtained from:
 
-* [Maven Central](#)
+* [Maven Central](https://central.sonatype.com/artifact/org.itsallcode/openfasttrace-asciidoc-plugin)
 * [GitHub](https://github.com/itsallcode/openfasttrace-asciidoc-plugin/releases)
 
 More details about adding the plugin to an existing establishment are outlined in the [developer guide](doc/developer_guide.md).

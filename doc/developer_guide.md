@@ -39,7 +39,7 @@ The list below shows all build time dependencies in alphabetical order. Note tha
 | Dependency                                                                   | Purpose                                 | License                       |
 | ---------------------------------------------------------------------------- | --------------------------------------- | ----------------------------- |
 | [Hamcrest Auto Matcher](https://github.com/itsallcode/hamcrest-auto-matcher) | Speed-up for building Hamcrest matchers | GNU General Public License V3 |
-| [JUnit](https://junit.org/junit5)                                            | Unit testing framework                  | Eclipse Public License 1.0    |
+| [JUnit](https://docs.junit.org/current/user-guide/)                          | Unit testing framework                  | Eclipse Public License 1.0    |
 | [Mockito](https://github.com/mockito/mockito)                                | Mocking framework                       | MIT License                   |
 
 ### Runtime Dependencies

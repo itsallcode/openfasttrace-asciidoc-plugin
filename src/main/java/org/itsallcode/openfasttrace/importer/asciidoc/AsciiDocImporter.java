@@ -8,7 +8,10 @@ import java.util.stream.StreamSupport;
 import org.asciidoctor.Asciidoctor;
 import org.asciidoctor.Options;
 import org.asciidoctor.ast.*;
+import org.itsallcode.openfasttrace.api.core.LocatedSpecificationItemId;
 import org.itsallcode.openfasttrace.api.core.Location;
+import org.itsallcode.openfasttrace.api.core.SourcePosition;
+import org.itsallcode.openfasttrace.api.core.SourceRange;
 import org.itsallcode.openfasttrace.api.core.SpecificationItemId;
 import org.itsallcode.openfasttrace.api.importer.ImportEventListener;
 import org.itsallcode.openfasttrace.api.importer.Importer;
@@ -70,6 +73,18 @@ class AsciiDocImporter implements Importer
         return getAttributeValueAsList(block, ATTRIBUTE_OFT_COVERS);
     }
 
+    private static LocatedSpecificationItemId createLocatedSpecificationItemId(final String id,
+            final StructuralNode block)
+    {
+        // The AsciiDoc parser gives us the line but no column information, so we narrow the location at least down to
+        // be between the start of this line and the start of the next.
+        final int line = block.getSourceLocation().getLineNumber() - 1;
+        return LocatedSpecificationItemId.builder()
+                .id(new SpecificationItemId.Builder(id).build())
+                .range(new SourceRange(new SourcePosition(line, 0), new SourcePosition(line + 1, 0)))
+                .build();
+    }
+
     private Location getLocation(final StructuralNode block)
     {
         return Location.builder()
@@ -79,18 +94,15 @@ class AsciiDocImporter implements Importer
 
     private Optional<String> getStringContent(final StructuralNode node)
     {
-        switch (node.getContentModel())
-        {
-        case CONTENT_MODEL_SIMPLE:
+        if (node.getContentModel().equals(CONTENT_MODEL_SIMPLE)) {
             LOG.fine("extracting SIMPLE content");
             return Optional.ofNullable(node.getContent())
                     .filter(String.class::isInstance)
                     .map(String.class::cast);
-        default:
-            LOG.fine(() -> "'%s' content model not (yet) supported [%s]".formatted(node.getContentModel(),
-                    getLocation(node)));
-            return Optional.empty();
         }
+        LOG.fine(() -> "'%s' content model not (yet) supported [%s]".formatted(node.getContentModel(),
+                getLocation(node)));
+        return Optional.empty();
     }
 
     // [impl->dsn~adoc-specification-item-title~1]
@@ -110,7 +122,7 @@ class AsciiDocImporter implements Importer
     private void processSpecificationItemDepends(final StructuralNode block)
     {
         getAttributeValueAsList(block, ATTRIBUTE_OFT_DEPENDS).stream()
-                .map(dependsOnId -> new SpecificationItemId.Builder(dependsOnId).build())
+                .map(dependsOnId -> createLocatedSpecificationItemId(dependsOnId, block))
                 .forEach(this.listener::addDependsOnId);
     }
 
@@ -125,7 +137,7 @@ class AsciiDocImporter implements Importer
     private void processSpecificationItemCovers(final StructuralNode block)
     {
         getCoveredIds(block).stream()
-                .map(coversId -> new SpecificationItemId.Builder(coversId).build())
+                .map(coversId -> createLocatedSpecificationItemId(coversId, block))
                 .forEach(this.listener::addCoveredId);
     }
 
@@ -167,7 +179,7 @@ class AsciiDocImporter implements Importer
 
     private void processSpecificationItemBlock(final String sid, final StructuralNode block)
     {
-        final SpecificationItemId specItemId = new SpecificationItemId.Builder(sid).build();
+        final LocatedSpecificationItemId specItemId = createLocatedSpecificationItemId(sid, block);
         final Location location = getLocation(block);
         LOG.fine(() -> String.format("adding specification item [ID: %s, location: %s]", specItemId,
                 location));
@@ -189,7 +201,7 @@ class AsciiDocImporter implements Importer
     private void processForwardingBlock(final String skippedType, final StructuralNode block)
     {
         final List<String> coveredSpecItems = getCoveredIds(block);
-        if (coveredSpecItems.isEmpty() || coveredSpecItems.size() > 1)
+        if (coveredSpecItems.size() != 1)
         {
             LOG.severe(
                     () -> """
@@ -198,11 +210,16 @@ class AsciiDocImporter implements Importer
                             """.formatted(getLocation(block)));
             return;
         }
-        final SpecificationItemId coveredSid = new SpecificationItemId.Builder(coveredSpecItems.get(0)).build();
-        final SpecificationItemId specItemId = new SpecificationItemId.Builder()
+        final LocatedSpecificationItemId coveredLocatedSpecificaitonItemId =
+                createLocatedSpecificationItemId(coveredSpecItems.get(0), block);
+        final SpecificationItemId coveredSpecificationItemId = coveredLocatedSpecificaitonItemId.getId();
+        final LocatedSpecificationItemId specItemId = LocatedSpecificationItemId.builder()
+                .id(new SpecificationItemId.Builder()
                 .artifactType(skippedType)
-                .name(coveredSid.getName())
-                .revision(coveredSid.getRevision())
+                .name(coveredSpecificationItemId.getName())
+                .revision(coveredSpecificationItemId.getRevision())
+                .build())
+                .range(coveredLocatedSpecificaitonItemId.getRange())
                 .build();
         final Location location = getLocation(block);
         LOG.fine(() -> "adding forwarding specification item [ID: %s, location: %s]".formatted(specItemId,
@@ -211,7 +228,7 @@ class AsciiDocImporter implements Importer
         this.listener.beginSpecificationItem();
         this.listener.setId(specItemId);
         this.listener.setLocation(location);
-        this.listener.addCoveredId(coveredSid);
+        this.listener.addCoveredId(coveredLocatedSpecificaitonItemId);
         processSpecificationItemNeeds(block);
         this.listener.endSpecificationItem();
     }

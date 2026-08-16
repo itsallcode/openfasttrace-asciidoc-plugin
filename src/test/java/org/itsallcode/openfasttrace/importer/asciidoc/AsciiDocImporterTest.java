@@ -4,6 +4,9 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.*;
 
+import org.itsallcode.openfasttrace.api.core.LocatedSpecificationItemId;
+import org.itsallcode.openfasttrace.api.core.SourcePosition;
+import org.itsallcode.openfasttrace.api.core.SourceRange;
 import org.itsallcode.openfasttrace.api.core.SpecificationItemId;
 import org.itsallcode.openfasttrace.api.importer.ImportEventListener;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,6 +24,31 @@ class AsciiDocImporterTest
     @Mock
     private ImportEventListener listener;
     private InOrder inOrder;
+
+    private static LocatedSpecificationItemId locatedIdAtLine(final String id, final int line)
+    {
+        final SpecificationItemId expectedId = new SpecificationItemId.Builder(id).build();
+        final SourceRange expectedRange = new SourceRange(new SourcePosition(line, 0),
+                new SourcePosition(line + 1, 0));
+        return argThat(locatedId -> expectedId.equals(locatedId.getId())
+                && expectedRange.equals(locatedId.getRange())
+                && locatedId.getArtifactTypeRange().isEmpty()
+                && locatedId.getNameRange().isEmpty()
+                && locatedId.getRevisionRange().isEmpty());
+    }
+
+    private static int findBlockStartLine(final String content)
+    {
+        final var lines = content.lines().toList();
+        for (int line = 0; line < lines.size(); line++)
+        {
+            if ("## A Requirement".equals(lines.get(line)) || "====".equals(lines.get(line)))
+            {
+                return line;
+            }
+        }
+        throw new IllegalArgumentException("No specification item block start found");
+    }
 
     @BeforeEach
     void setup()
@@ -131,16 +159,17 @@ class AsciiDocImporterTest
     {
         final var importer = new AsciiDocImporter(content, listener);
         importer.runImport();
+        final int line = findBlockStartLine(content);
         inOrder.verify(listener).beginSpecificationItem();
-        verify(listener).setId(new SpecificationItemId.Builder("dsn~detail-design~1").build());
+        verify(listener).setId(locatedIdAtLine("dsn~detail-design~1", line));
         verify(listener).setLocation(any());
         verify(listener).setTitle("A Requirement");
-        verify(listener).addDependsOnId(new SpecificationItemId.Builder("dsn~grand-design~1").build());
-        verify(listener).addDependsOnId(new SpecificationItemId.Builder("arch~general-constraints~1").build());
+        verify(listener).addDependsOnId(locatedIdAtLine("dsn~grand-design~1", line));
+        verify(listener).addDependsOnId(locatedIdAtLine("arch~general-constraints~1", line));
         verify(listener).addNeededArtifactType("impl");
         verify(listener).addNeededArtifactType("utest");
-        verify(listener).addCoveredId(new SpecificationItemId.Builder("req~first-requirement~1").build());
-        verify(listener).addCoveredId(new SpecificationItemId.Builder("req~second-requirement~1").build());
+        verify(listener).addCoveredId(locatedIdAtLine("req~first-requirement~1", line));
+        verify(listener).addCoveredId(locatedIdAtLine("req~second-requirement~1", line));
         verify(listener).addTag("Priority1");
         verify(listener).addTag("OtherComponent");
         verify(listener).appendDescription("The description");
@@ -166,12 +195,12 @@ class AsciiDocImporterTest
         final var importer = new AsciiDocImporter(content, listener);
         importer.runImport();
         inOrder.verify(listener).beginSpecificationItem();
-        verify(listener).setId(new SpecificationItemId.Builder("dsn~first-requirement~1").build());
+        verify(listener).setId(locatedIdAtLine("dsn~first-requirement~1", 5));
         verify(listener).setLocation(
                 argThat(location -> "verbatim".equals(location.getPath()) && location.getLine() == 6));
         verify(listener).addNeededArtifactType("impl");
         verify(listener).addNeededArtifactType("utest");
-        verify(listener).addCoveredId(new SpecificationItemId.Builder("req~first-requirement~1").build());
+        verify(listener).addCoveredId(locatedIdAtLine("req~first-requirement~1", 5));
         inOrder.verify(listener).endSpecificationItem();
         verifyNoMoreInteractions(listener);
     }
@@ -198,8 +227,7 @@ class AsciiDocImporterTest
         final var importer = new AsciiDocImporter(content, listener);
         importer.runImport();
         inOrder.verify(listener).beginSpecificationItem();
-        verify(listener)
-                .setId(new SpecificationItemId.Builder("req~nested-in-table~1").build());
+        verify(listener).setId(locatedIdAtLine("req~nested-in-table~1", 10));
         verify(listener).setLocation(
                 argThat(location -> "verbatim".equals(location.getPath())));
         verify(listener).addNeededArtifactType("dsn");

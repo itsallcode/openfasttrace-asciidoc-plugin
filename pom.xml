@@ -4,7 +4,7 @@
 
     <groupId>org.itsallcode</groupId>
     <artifactId>openfasttrace-asciidoc-plugin</artifactId>
-    <version>0.3.2</version>
+    <version>1.0.0</version>
     <packaging>jar</packaging>
 
     <name>OpenFastTrace AsciiDoc Importer</name>
@@ -15,7 +15,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>17</java.version>
-        <oft.version>4.8.0</oft.version>
+        <oft.version>4.9.0</oft.version>
         <jacoco.version>0.8.14</jacoco.version>
         <!-- Upgrading to 3.0.1 causes test failures, see https://github.com/itsallcode/openfasttrace-asciidoc-plugin/issues/19 -->
         <asciidoctor.version>3.0.0</asciidoctor.version>

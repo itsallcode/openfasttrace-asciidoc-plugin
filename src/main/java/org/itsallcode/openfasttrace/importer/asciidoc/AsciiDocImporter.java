@@ -78,7 +78,7 @@ class AsciiDocImporter implements Importer
 
     private Optional<String> getStringContent(final StructuralNode node)
     {
-        LOG.finer(() -> "getting content for node [content model: %s, name: %s, location: %s]"
+        LOG.finest(() -> "getting content for node [content model: %s, name: %s, location: %s]"
                 .formatted(node.getContentModel(), node.getNodeName(), getLocation(node)));
         switch (node.getContentModel())
         {
@@ -149,7 +149,7 @@ class AsciiDocImporter implements Importer
 
         descriptionBlock.flatMap(this::getStringContent)
                 .ifPresent(description -> {
-                    LOG.finer(() -> "adding description to spec item: %s".formatted(description));
+                    LOG.finest(() -> "adding description to spec item: %s".formatted(description));
                     listener.appendDescription(description);
                 });
     }
@@ -162,7 +162,7 @@ class AsciiDocImporter implements Importer
                 .findFirst()
                 .flatMap(this::getStringContent)
                 .ifPresent(rationale -> {
-                    LOG.finer(() -> "adding rationale to spec item: %s".formatted(rationale));
+                    LOG.finest(() -> "adding rationale to spec item: %s".formatted(rationale));
                     listener.appendRationale(rationale);
                 });
     }
@@ -175,7 +175,7 @@ class AsciiDocImporter implements Importer
                 .findFirst()
                 .flatMap(this::getStringContent)
                 .ifPresent(comment -> {
-                    LOG.finer(() -> "adding comment to spec item: %s".formatted(comment));
+                    LOG.finest(() -> "adding comment to spec item: %s".formatted(comment));
                     listener.appendComment(comment);
                 });
     }

@@ -26,13 +26,12 @@ class AsciiDocImporter implements Importer
 
     private static final String CONTENT_MODEL_SIMPLE = "simple";
 
-    private static final String KEY_ROLE = "role";
+    private static final String NODE_NAME_PARAGRAPH = "paragraph";
 
-    private static final String ROLE_COMMENT = ":comment";
-    private static final String ROLE_DESCRIPTION = ":description";
-    private static final String ROLE_RATIONALE = ":rationale";
-
-    private static final String ROLE_NAME_SPECITEM = "specitem";
+    private static final String ROLE_COMMENT = "comment";
+    private static final String ROLE_DESCRIPTION = "description";
+    private static final String ROLE_RATIONALE = "rationale";
+    private static final String ROLE_SPECITEM = "specitem";
 
     private static final Logger LOG = Logger.getLogger(AsciiDocImporter.class.getName());
 
@@ -79,6 +78,8 @@ class AsciiDocImporter implements Importer
 
     private Optional<String> getStringContent(final StructuralNode node)
     {
+        LOG.finest(() -> "getting content for node [content model: %s, name: %s, location: %s]"
+                .formatted(node.getContentModel(), node.getNodeName(), getLocation(node)));
         switch (node.getContentModel())
         {
         case CONTENT_MODEL_SIMPLE:
@@ -139,38 +140,52 @@ class AsciiDocImporter implements Importer
     // [impl->dsn~adoc-specification-item-description~1]
     private void processSpecificationItemDescription(final StructuralNode block)
     {
-        final Optional<StructuralNode> descriptionBlock = block.findBy(Map.of(KEY_ROLE, ROLE_DESCRIPTION)).stream()
+        final Optional<StructuralNode> descriptionBlock = block.getBlocks().stream()
+                .filter(node -> !ROLE_RATIONALE.equals(node.getRole()))
+                .filter(node -> !ROLE_COMMENT.equals(node.getRole()))
+                .filter(node -> ROLE_DESCRIPTION.equals(node.getRole())
+                        || NODE_NAME_PARAGRAPH.equals(node.getNodeName()))
                 .findFirst();
-        descriptionBlock
-                .or(() -> block.getBlocks().stream()
-                        .filter(node -> !"rationale".equals(node.getRole()) && !"comment".equals(node.getRole()))
-                        .findFirst())
-                .flatMap(this::getStringContent)
-                .ifPresent(listener::appendDescription);
+
+        descriptionBlock.flatMap(this::getStringContent)
+                .ifPresent(description -> {
+                    LOG.finest(() -> "adding description to spec item: %s".formatted(description));
+                    listener.appendDescription(description);
+                });
     }
 
     // [impl->dsn~adoc-specification-item-rationale~1]
     private void processSpecificationItemRationale(final StructuralNode block)
     {
-        block.findBy(Map.of(KEY_ROLE, ROLE_RATIONALE)).stream().findFirst()
+        block.getBlocks().stream()
+                .filter(node -> ROLE_RATIONALE.equals(node.getRole()))
+                .findFirst()
                 .flatMap(this::getStringContent)
-                .ifPresent(listener::appendRationale);
+                .ifPresent(rationale -> {
+                    LOG.finest(() -> "adding rationale to spec item: %s".formatted(rationale));
+                    listener.appendRationale(rationale);
+                });
     }
 
     // [impl->dsn~adoc-specification-item-comment~1]
     private void processSpecificationItemComment(final StructuralNode block)
     {
-        block.findBy(Map.of(KEY_ROLE, ROLE_COMMENT)).stream().findFirst()
+        block.getBlocks().stream()
+                .filter(node -> ROLE_COMMENT.equals(node.getRole()))
+                .findFirst()
                 .flatMap(this::getStringContent)
-                .ifPresent(listener::appendComment);
+                .ifPresent(comment -> {
+                    LOG.finest(() -> "adding comment to spec item: %s".formatted(comment));
+                    listener.appendComment(comment);
+                });
     }
 
     private void processSpecificationItemBlock(final String sid, final StructuralNode block)
     {
         final SpecificationItemId specItemId = new SpecificationItemId.Builder(sid).build();
         final Location location = getLocation(block);
-        LOG.fine(() -> String.format("adding specification item [ID: %s, location: %s]", specItemId,
-                location));
+        LOG.fine(() -> String.format("adding specification item [ID: %s, block name: %s, location: %s]", specItemId,
+                block.getNodeName(), location));
 
         this.listener.beginSpecificationItem();
         this.listener.setId(specItemId);
@@ -220,8 +235,8 @@ class AsciiDocImporter implements Importer
     // [impl->dsn~adoc-artifact-forwarding-notation~1]
     private void processSpecificationItem(final StructuralNode block)
     {
-        LOG.fine(() -> String.format("found specitem block [id: %s]",
-                block.getId()));
+        LOG.fine(() -> String.format("found specitem block [id: %s, name: %s]",
+                block.getId(), block.getNodeName()));
 
         Optional.ofNullable(block.getAttribute(ATTRIBUTE_OFT_SID))
                 .filter(String.class::isInstance)
@@ -248,7 +263,7 @@ class AsciiDocImporter implements Importer
 
     private void processBlock(final StructuralNode block)
     {
-        if (block.hasRole(ROLE_NAME_SPECITEM))
+        if (block.hasRole(ROLE_SPECITEM))
         {
             processSpecificationItem(block);
         }
@@ -280,7 +295,7 @@ class AsciiDocImporter implements Importer
     private Document parseAsciiDoc()
     {
         final Options options = Options.builder().sourcemap(true).build();
-        try (final Asciidoctor asciidoctor = Asciidoctor.Factory.create())
+        try (Asciidoctor asciidoctor = Asciidoctor.Factory.create())
         {
             if (this.file != null)
             {

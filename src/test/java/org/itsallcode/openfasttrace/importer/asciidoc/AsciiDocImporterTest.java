@@ -65,7 +65,7 @@ class AsciiDocImporterTest
     @ValueSource(strings =
     {
             """
-                    # Spec
+                    # Spec 1
 
                     [.specitem, oft-sid="dsn~detail-design~1", oft-depends="dsn~grand-design~1, arch~general-constraints~1", oft-needs="impl, utest", oft-covers="req~first-requirement~1, req~second-requirement~1", oft-tags="Priority1, OtherComponent"]
                     ## A Requirement
@@ -79,7 +79,7 @@ class AsciiDocImporterTest
                     A comment
                     """,
             """
-                    # Spec
+                    # Spec 2
 
                     [.specitem, oft-sid="dsn~detail-design~1", oft-depends="dsn~grand-design~1, arch~general-constraints~1", oft-needs="impl, utest", oft-covers="req~first-requirement~1, req~second-requirement~1", oft-tags="Priority1, OtherComponent"]
                     ## A Requirement
@@ -94,7 +94,7 @@ class AsciiDocImporterTest
                     A comment
                     """,
             """
-                    # Spec
+                    # Spec 3
 
                     .A Requirement
                     [.specitem, oft-sid="dsn~detail-design~1", oft-depends="dsn~grand-design~1, arch~general-constraints~1", oft-needs="impl, utest", oft-covers="req~first-requirement~1, req~second-requirement~1", oft-tags="Priority1, OtherComponent"]
@@ -110,7 +110,7 @@ class AsciiDocImporterTest
                     ====
                     """,
             """
-                    # Spec
+                    # Spec 4
 
                     .A Requirement
                     [.specitem, oft-sid="dsn~detail-design~1", oft-depends="dsn~grand-design~1, arch~general-constraints~1", oft-needs="impl, utest", oft-covers="req~first-requirement~1, req~second-requirement~1", oft-tags="Priority1, OtherComponent"]

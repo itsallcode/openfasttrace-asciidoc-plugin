@@ -223,16 +223,16 @@ class AsciiDocImporter implements Importer
                             """.formatted(getLocation(block)));
             return;
         }
-        final LocatedSpecificationItemId coveredLocatedSpecificaitonItemId =
+        final LocatedSpecificationItemId coveredLocatedSpecificationItemId =
                 createLocatedSpecificationItemId(coveredSpecItems.get(0), block);
-        final SpecificationItemId coveredSpecificationItemId = coveredLocatedSpecificaitonItemId.getId();
+        final SpecificationItemId coveredSpecificationItemId = coveredLocatedSpecificationItemId.getId();
         final LocatedSpecificationItemId specItemId = LocatedSpecificationItemId.builder()
                 .id(new SpecificationItemId.Builder()
                 .artifactType(skippedType)
                 .name(coveredSpecificationItemId.getName())
                 .revision(coveredSpecificationItemId.getRevision())
                 .build())
-                .range(coveredLocatedSpecificaitonItemId.getRange())
+                .range(coveredLocatedSpecificationItemId.getRange())
                 .build();
         final Location location = getLocation(block);
         LOG.fine(() -> "adding forwarding specification item [ID: %s, location: %s]".formatted(specItemId,
@@ -241,7 +241,7 @@ class AsciiDocImporter implements Importer
         this.listener.beginSpecificationItem();
         this.listener.setId(specItemId);
         this.listener.setLocation(location);
-        this.listener.addCoveredId(coveredLocatedSpecificaitonItemId);
+        this.listener.addCoveredId(coveredLocatedSpecificationItemId);
         processSpecificationItemNeeds(block);
         this.listener.endSpecificationItem();
     }

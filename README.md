@@ -1,4 +1,4 @@
-# <img src="doc/openfasttrace_logo.svg" alt="OFT logo" width="150"/> OpenFastTrace AsciiDoc Plugin
+<# <img src="doc/openfasttrace_logo.svg" alt="OFT logo" width="150"/> OpenFastTrace AsciiDoc Plugin
 
 ## What is OpenFastTrace AsciiDoc Plugin?
 
@@ -81,12 +81,13 @@ OpenFastTrace AsciiDoc Plugin needs a Java 17 (or later) runtime environment to 
 
 To install Java Runtime Environment:
 
-    apt-get install openjdk-17-jre
+```shell
+apt-get install openjdk-17-jre
+```
 
 ## Running OpenFastTrace With the AsciiDoc Plugin
 
 To run OFT with the plugin, you can add the plugin to the Java classpath or one of OFT's plugin search directories.
 
-For more details, please check out the OFT user guide's chapter on plugins.
+For more details, please check out the OFT [user guide's chapter on plugins](https://openfasttrace.itsallcode.org/plugins.html).
 
-<!-- TODO: add link -->

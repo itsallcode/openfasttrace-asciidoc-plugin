@@ -1,12 +1,10 @@
-<# <img src="doc/openfasttrace_logo.svg" alt="OFT logo" width="150"/> OpenFastTrace AsciiDoc Plugin
+<img src="doc/openfasttrace_logo.svg" alt="OFT logo" width="150"/> OpenFastTrace AsciiDoc Plugin
 
 ## What is OpenFastTrace AsciiDoc Plugin?
 
 This plugin allows OpenFastTrace (OFT) to parse and trace requirements in AsciiDoc files. Requirement tracing keeps track of whether you implemented everything you planned to in your specifications. It also identifies obsolete parts of your product and helps you to get rid of them.
 
 For more details about requirement tracing and how to use OpenFastTrace, refer to the [user guide](doc/user_guide.md).
-
-_[Place a screenshot of a tracing report generated using this plugin here]_
 
 ## Project Information
 

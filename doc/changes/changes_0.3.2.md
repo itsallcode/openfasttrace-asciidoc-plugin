@@ -9,3 +9,4 @@ We upgraded the OFT dependency to version 4.8.0.
 ## Refactoring
 
 * Updated OFT to 4.8.0
+* Updated asciidoctorj dependency to 3.0.1

@@ -21,5 +21,5 @@
             "-Djava.util.logging.config.file=src/test/resources/logging.properties"
         ]
     },
-    "asciidoc.antora.enableAntoraSupport": false
+    "asciidoc.antora.showEnableAntoraPrompt": false
 }
